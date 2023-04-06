@@ -3,14 +3,21 @@
 // doing this project I didn't want to create sth real-world applyable
 // By developing this project I just want to pratice Foundry and Solidity knowledge
 pragma solidity 0.8.18;
+import "../lib/openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+import "../lib/openzeppelin-contracts/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "../lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
-contract FavoriteColor {
+
+contract FavoriteColor is Initializable, UUPSUpgradeable, Ownable {
     event EncodeColor(string indexed stringColor, bytes prevColor, bytes bytesColor);
     event DecodeColor(string indexed stringColor, bytes bytesColor);
 
 
     mapping(address => bytes) public favColors;
 
+
+    function initialize() public initializer {}
+    function _authorizeUpgrade(address) internal override onlyOwner {}
 
     function setFavColor(string calldata _color) external returns(bytes memory) {
         bytes memory colorBytes = abi.encode(_color);
